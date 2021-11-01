@@ -1,23 +1,50 @@
-<!doctype html>
-<html lang="pt-br">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="short icon" href="img/moviestar.ico">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>MovieStar</title>
-  </head>
-  <body>
-    <h1>MovieStar</h1>
+<?php
+  require_once("templates/header.php");
 
+  require_once("dao/MovieDAO.php");
 
-    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+  // DAO dos filmes
+  $movieDao = new MovieDAO($conn, $BASE_URL);
 
-  </body>
-</html>
+  $latestMovies = $movieDao->getLatestMovies();
+
+  $actionMovies = $movieDao->getMoviesByCategory("Ação");
+
+  $comedyMovies = $movieDao->getMoviesByCategory("Comédia");
+
+?>
+  <div id="main-container" class="container-fluid">
+    <h2 class="section-title">Filmes novos</h2>
+    <p class="section-description">Veja as críticas dos últimos filmes adicionados no MovieStar</p>
+    <div class="movies-container">
+      <?php foreach($latestMovies as $movie): ?>
+        <?php require("templates/movie_card.php"); ?>
+      <?php endforeach; ?>
+      <?php if(count($latestMovies) === 0): ?>
+        <p class="empty-list">Ainda não há filmes cadastrados!</p>
+      <?php endif; ?>
+    </div>
+    <h2 class="section-title">Ação</h2>
+    <p class="section-description">Veja os melhores filmes de ação</p>
+    <div class="movies-container">
+      <?php foreach($actionMovies as $movie): ?>
+        <?php require("templates/movie_card.php"); ?>
+      <?php endforeach; ?>
+      <?php if(count($actionMovies) === 0): ?>
+        <p class="empty-list">Ainda não há filmes de ação cadastrados!</p>
+      <?php endif; ?>
+    </div>
+    <h2 class="section-title">Comédia</h2>
+    <p class="section-description">Veja os melhores filmes de comédia</p>
+    <div class="movies-container">
+      <?php foreach($comedyMovies as $movie): ?>
+        <?php require("templates/movie_card.php"); ?>
+      <?php endforeach; ?>
+      <?php if(count($comedyMovies) === 0): ?>
+        <p class="empty-list">Ainda não há filmes de comédia cadastrados!</p>
+      <?php endif; ?>
+    </div>
+  </div>
+<?php
+  require_once("templates/footer.php");
+?>
